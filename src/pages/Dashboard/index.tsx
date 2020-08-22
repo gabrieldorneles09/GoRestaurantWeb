@@ -28,6 +28,8 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     async function loadFoods(): Promise<void> {
       // TODO LOAD FOODS
+      const response = await api.get('/foods');
+      setFoods(response.data);
     }
 
     loadFoods();
@@ -38,6 +40,14 @@ const Dashboard: React.FC = () => {
   ): Promise<void> {
     try {
       // TODO ADD A NEW FOOD PLATE TO THE API
+      const newFood = {
+        ...food,
+        available: true,
+      };
+
+      const response = await api.post('/foods', newFood);
+
+      setFoods([...foods, response.data]);
     } catch (err) {
       console.log(err);
     }
