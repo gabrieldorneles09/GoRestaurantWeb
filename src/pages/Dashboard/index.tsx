@@ -57,10 +57,41 @@ const Dashboard: React.FC = () => {
     food: Omit<IFoodPlate, 'id' | 'available'>,
   ): Promise<void> {
     // TODO UPDATE A FOOD PLATE ON THE API
+
+    // const newFoods = foods.filter(f => f.id !== editingFood.id);
+
+    const updatedFoodIndex = foods.findIndex(f => f.id === editingFood.id);
+
+    const updatedFood = {
+      id: editingFood.id,
+      ...food,
+      available: editingFood.available,
+    };
+
+    const newFoods = foods;
+
+    newFoods[updatedFoodIndex] = updatedFood;
+
+    setFoods([...newFoods]);
+
+    // await api.put<IFoodPlate>(`/foods/${editingFood.id}`, {
+    //   ...food,
+    //   available: editingFood.available,
+    // });
   }
 
   async function handleDeleteFood(id: number): Promise<void> {
     // TODO DELETE A FOOD PLATE FROM THE API
+
+    // await api.delete(`/foods/${id}`);
+
+    const deletedFoodIndex = foods.findIndex(f => f.id === id);
+
+    const newFoods = foods;
+
+    newFoods.splice(deletedFoodIndex, 1);
+
+    setFoods([...newFoods]);
   }
 
   function toggleModal(): void {
@@ -73,6 +104,9 @@ const Dashboard: React.FC = () => {
 
   function handleEditFood(food: IFoodPlate): void {
     // TODO SET THE CURRENT EDITING FOOD ID IN THE STATE
+    setEditingFood(food);
+    // toggleEditModal(); unnecessary
+    handleUpdateFood(editingFood);
   }
 
   return (
@@ -98,6 +132,7 @@ const Dashboard: React.FC = () => {
               food={food}
               handleDelete={handleDeleteFood}
               handleEditFood={handleEditFood}
+              setEditModalOpen={toggleEditModal}
             />
           ))}
       </FoodsContainer>
